@@ -1,0 +1,6 @@
+{
+  "name": "STIN-Somdej connect",
+  "description": "STIN-Somdej connect: System for managing nursing clinical practice, student groups, schedules, flow work, van transportation, rooms, and reports for educational institutions and Somdet Hospital.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

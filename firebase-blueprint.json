@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "FlowWork": {
+      "title": "Flow Work Submission",
+      "description": "Student clinical practice case study or report submission reviewed by chairman",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "studentName": { "type": "string", "maxLength": 100 },
+        "studentGroup": { "type": "string", "maxLength": 50 },
+        "department": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string", "maxLength": 50 },
+        "feedback": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "Announcement": {
+      "title": "System Announcement",
+      "description": "Notices from chairman and hospital staff",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "category": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "VanBooking": {
+      "title": "Van Booking",
+      "description": "Van reservation with van number, driver name, phone number and student assignment",
+      "properties": {
+        "id": { "type": "string" },
+        "route": { "type": "string", "maxLength": 100 },
+        "vanNumber": { "type": "string", "maxLength": 50 },
+        "driverName": { "type": "string", "maxLength": 100 },
+        "driverPhone": { "type": "string", "maxLength": 50 },
+        "assignedStudentName": { "type": "string", "maxLength": 100 },
+        "timeSlot": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "maxLength": 30 }
+      }
+    },
+    "StudentGroupAllocation": {
+      "title": "Student Group Allocation",
+      "description": "Student list uploaded and allocated into clinical practice groups",
+      "properties": {
+        "id": { "type": "string" },
+        "studentName": { "type": "string", "maxLength": 100 },
+        "studentId": { "type": "string", "maxLength": 50 },
+        "groupName": { "type": "string", "maxLength": 50 },
+        "ward": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "AccommodationRecord": {
+      "title": "Accommodation & Billing Record",
+      "description": "Room booking, utility bills and payment slips",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "maxLength": 30 },
+        "title": { "type": "string", "maxLength": 200 },
+        "amount": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "TrainingSchedule": {
+      "title": "Training Schedule",
+      "description": "Training schedule mapped by student group, instructor, training site, and calendar date range",
+      "properties": {
+        "id": { "type": "string" },
+        "studentGroup": { "type": "string", "maxLength": 100 },
+        "instructorName": { "type": "string", "maxLength": 100 },
+        "trainingSite": { "type": "string", "maxLength": 200 },
+        "startDate": { "type": "string", "maxLength": 50 },
+        "endDate": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "flowWorks": {
+      "schema": "FlowWork",
+      "read": "allow read: if true;",
+      "write": "allow write: if true;"
+    },
+    "announcements": {
+      "schema": "Announcement",
+      "read": "allow read: if true;",
+      "write": "allow write: if true;"
+    },
+    "vanBookings": {
+      "schema": "VanBooking",
+      "read": "allow read: if true;",
+      "write": "allow write: if true;"
+    },
+    "studentGroups": {
+      "schema": "StudentGroupAllocation",
+      "read": "allow read: if true;",
+      "write": "allow write: if true;"
+    },
+    "accommodationRecords": {
+      "schema": "AccommodationRecord",
+      "read": "allow read: if true;",
+      "write": "allow write: if true;"
+    },
+    "trainingSchedules": {
+      "schema": "TrainingSchedule",
+      "read": "allow read: if true;",
+      "write": "allow write: if true;"
+    }
+  }
+}
