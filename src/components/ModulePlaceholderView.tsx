@@ -20,7 +20,9 @@ import {
   FileSpreadsheet,
   Link2,
   Building,
-  UserCheck
+  UserCheck,
+  Phone,
+  Car
 } from 'lucide-react';
 
 interface ModulePlaceholderViewProps {
@@ -53,8 +55,11 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
   const [newStudentName, setNewStudentName] = useState('');
   const [newAnnouncementDesc, setNewAnnouncementDesc] = useState('');
   
-  // Van assignment form states
+  // Van assignment form states (with van number, driver name, phone)
   const [vanRoute, setVanRoute] = useState('สถาบัน ⟷ โรงพยาบาลสมเด็จ (รอบ 08:00)');
+  const [vanNumber, setVanNumber] = useState('คันที่ 1');
+  const [driverName, setDriverName] = useState('');
+  const [driverPhone, setDriverPhone] = useState('');
   const [vanSelectedStudentId, setVanSelectedStudentId] = useState('');
   
   // Student Group Upload states
@@ -62,9 +67,9 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
   const [targetGroup, setTargetGroup] = useState('กลุ่ม ก');
   const [targetWard, setTargetWard] = useState('หอผู้ป่วยอายุรกรรม');
 
-  // Training Schedule form states (Group, Instructor, Training Site, Calendar Date Range)
+  // Training Schedule form states (supports multiple instructors co-actively)
   const [schedGroup, setSchedGroup] = useState('กลุ่ม ก');
-  const [schedInstructor, setSchedInstructor] = useState('');
+  const [schedInstructors, setSchedInstructors] = useState('');
   const [schedSite, setSchedSite] = useState('โรงพยาบาลสมเด็จ - หอผู้ป่วยอายุรกรรม');
   const [schedStartDate, setSchedStartDate] = useState('');
   const [schedEndDate, setSchedEndDate] = useState('');
@@ -177,21 +182,21 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
 
   const handleAddTrainingSchedule = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!schedInstructor.trim() || !schedStartDate || !schedEndDate) return;
+    if (!schedInstructors.trim() || !schedStartDate || !schedEndDate) return;
     setLoading(true);
     try {
       await addDoc(collection(db, 'trainingSchedules'), {
         studentGroup: schedGroup.trim() || 'กลุ่ม ก',
-        instructorName: schedInstructor.trim(),
+        instructorNames: schedInstructors.trim(), // Supports multiple instructors co-actively
         trainingSite: schedSite.trim() || 'โรงพยาบาลสมเด็จ',
         startDate: schedStartDate,
         endDate: schedEndDate,
         createdAt: new Date().toLocaleDateString('th-TH', { hour: '2-digit', minute: '2-digit' }),
       });
-      setSchedInstructor('');
+      setSchedInstructors('');
       setSchedStartDate('');
       setSchedEndDate('');
-      setSuccessMsg('บันทึกตารางการฝึกปฏิบัติ (กลุ่ม, อาจารย์, แหล่งฝึก, ช่วงปฏิทิน) สำเร็จ');
+      setSuccessMsg('บันทึกตารางการฝึกปฏิบัติ (ระบุอาจารย์หลายท่าน) สำเร็จ');
       setTimeout(() => setSuccessMsg(''), 4000);
     } catch (error) {
       console.error(error);
@@ -202,7 +207,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
 
   const handleAddVanBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!vanRoute.trim() || !vanSelectedStudentId) return;
+    if (!vanRoute.trim() || !vanSelectedStudentId || !driverName.trim()) return;
     setLoading(true);
     try {
       const studentObj = studentGroups.find(s => s.id === vanSelectedStudentId);
@@ -210,15 +215,19 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
 
       await addDoc(collection(db, 'vanBookings'), {
         route: vanRoute.trim(),
+        vanNumber: vanNumber.trim() || 'คันที่ 1',
+        driverName: driverName.trim(),
+        driverPhone: driverPhone.trim() || 'ไม่ระบุ',
         assignedStudentId: vanSelectedStudentId,
         assignedStudentName: studentDisplayName,
         timeSlot: '08:00 - 09:00',
-        bookedBy: currentRole === 'student' ? 'นักศึกษาพยาบาล' : 'อาจารย์ / เจ้าหน้าที่',
         status: 'ยืนยันแล้ว (Confirmed)',
         createdAt: new Date().toLocaleDateString('th-TH', { hour: '2-digit', minute: '2-digit' }),
       });
+      setDriverName('');
+      setDriverPhone('');
       setVanSelectedStudentId('');
-      setSuccessMsg('Assign นักศึกษาขึ้นรถตู้สำเร็จ');
+      setSuccessMsg('บันทึกข้อมูลรถตู้ (คันที่ คนขับ เบอร์โทร) สำเร็จ');
       setTimeout(() => setSuccessMsg(''), 4000);
     } catch (error) {
       console.error(error);
@@ -347,7 +356,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
       case 'student-groups':
         return { titleTh: 'กลุ่มนักศึกษาและการจัดกลุ่ม (Student Groups)', titleEn: 'Student Groups Module', icon: Users, color: 'bg-indigo-50 text-indigo-600 border-indigo-200' };
       case 'van':
-        return { titleTh: 'บริการรถตู้รับส่งและการจัดสรร (Van Transportation)', titleEn: 'Van Transportation Module', icon: Bus, color: 'bg-emerald-50 text-emerald-600 border-emerald-200' };
+        return { titleTh: 'บริการรถตู้รับส่งและข้อมูลคนขับ (Van Transportation)', titleEn: 'Van Transportation Module', icon: Bus, color: 'bg-emerald-50 text-emerald-600 border-emerald-200' };
       case 'accommodation':
         return { titleTh: 'หอพัก ค่าน้ำ-ค่าไฟ และสลิปโอนเงิน (Accommodation & Billing)', titleEn: 'Rooms, Utilities & Payment Slips Unified Module', icon: Bed, color: 'bg-purple-50 text-purple-600 border-purple-200' };
       case 'announcements':
@@ -379,7 +388,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
         </button>
         <span className="text-xs font-mono text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 flex items-center gap-1.5 font-bold">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-          <span>Real-Time Calendar & Schedule Sync Active</span>
+          <span>Real-Time Van & Multiple Instructors Sync Active</span>
         </span>
       </div>
 
@@ -405,12 +414,12 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
               {details.titleTh}
             </h2>
             <p className="text-sm text-slate-600 max-w-2xl leading-relaxed">
-              จัดการตารางฝึกปฏิบัติอ้างอิงกลุ่มนักศึกษา อาจารย์ แหล่งฝึก และช่วงปฏิทินแบบ Real-time
+              รองรับการเลือกอาจารย์นิเทศหลายท่านในตารางฝึก และบันทึกข้อมูลรถตู้ (คันที่, คนขับ, เบอร์โทร, รายชื่อนักศึกษา) แบบ Real-time
             </p>
           </div>
         </div>
 
-        {/* ================= TRAINING SCHEDULE TAB ================= */}
+        {/* ================= TRAINING SCHEDULE TAB (Multiple Instructors) ================= */}
         {tab === 'schedule' && (
           <div className="space-y-8">
             <div className="p-6 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-5">
@@ -419,14 +428,14 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                   <Calendar className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">เพิ่มตารางการฝึกปฏิบัติ (Add Training Schedule)</h3>
-                  <p className="text-xs text-slate-500">กำหนดกลุ่มนักศึกษา อาจารย์นิเทศ แหล่งฝึก และช่วงปฏิทินเวลา</p>
+                  <h3 className="text-sm font-bold text-slate-900">เพิ่มตารางการฝึกปฏิบัติ (ระบุอาจารย์นิเทศได้หลายท่าน)</h3>
+                  <p className="text-xs text-slate-500">พิมพ์รายชื่ออาจารย์หลายท่านคั่นด้วยเครื่องหมายจุลภาค (,)</p>
                 </div>
               </div>
 
               <form onSubmit={handleAddTrainingSchedule} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700">กลุ่มนักศึกษา (Student Group)</label>
+                  <label className="text-xs font-bold text-slate-700">กลุ่มนักศึกษา</label>
                   <input
                     type="text"
                     placeholder="เช่น กลุ่ม ก, กลุ่ม ข..."
@@ -438,19 +447,19 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700">อาจารย์นิเทศ (Instructor Name)</label>
+                  <label className="text-xs font-bold text-slate-700">อาจารย์นิเทศ (เลือกหรือพิมพ์หลายท่านได้)</label>
                   <input
                     type="text"
-                    placeholder="เช่น อาจารย์ ดร. สมชาย..."
-                    value={schedInstructor}
-                    onChange={(e) => setSchedInstructor(e.target.value)}
+                    placeholder="เช่น อ.ดร.สมชาย, อ.ปิยะดา, อ.วิชัย..."
+                    value={schedInstructors}
+                    onChange={(e) => setSchedInstructors(e.target.value)}
                     className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
                     required
                   />
                 </div>
 
                 <div className="space-y-1.5 sm:col-span-2">
-                  <label className="text-xs font-bold text-slate-700">แหล่งฝึก / วอร์ด / โรงพยาบาล (Training Site / Ward)</label>
+                  <label className="text-xs font-bold text-slate-700">แหล่งฝึก / วอร์ด / โรงพยาบาล</label>
                   <input
                     type="text"
                     placeholder="เช่น โรงพยาบาลสมเด็จ - หอผู้ป่วยอายุรกรรม..."
@@ -462,7 +471,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700">วันที่เริ่มต้น (Start Date)</label>
+                  <label className="text-xs font-bold text-slate-700">วันที่เริ่มต้น</label>
                   <input
                     type="date"
                     value={schedStartDate}
@@ -473,7 +482,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700">วันที่สิ้นสุด (End Date)</label>
+                  <label className="text-xs font-bold text-slate-700">วันที่สิ้นสุด</label>
                   <input
                     type="date"
                     value={schedEndDate}
@@ -490,7 +499,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                     className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all flex items-center gap-2"
                   >
                     <Plus className="w-4 h-4" />
-                    <span>{loading ? 'กำลังบันทึก...' : 'บันทึกตารางการฝึก (Add Schedule)'}</span>
+                    <span>{loading ? 'กำลังบันทึก...' : 'บันทึกตารางการฝึก'}</span>
                   </button>
                 </div>
               </form>
@@ -509,7 +518,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
                           <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold">{item.studentGroup}</span>
-                          <span className="text-[10px] text-slate-500 font-mono">📅 ช่วงปฏิทิน: {item.startDate} ถึง {item.endDate}</span>
+                          <span className="text-[10px] text-slate-500 font-mono">📅 {item.startDate} ถึง {item.endDate}</span>
                         </div>
                         <h4 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
                           <Building className="w-4 h-4 text-blue-600" />
@@ -517,13 +526,12 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                         </h4>
                         <p className="text-xs text-slate-600 flex items-center gap-1.5">
                           <UserCheck className="w-3.5 h-3.5 text-slate-500" />
-                          <span>อาจารย์นิเทศ: <span className="font-semibold text-slate-800">{item.instructorName}</span></span>
+                          <span>อาจารย์นิเทศ: <span className="font-semibold text-slate-800">{item.instructorNames}</span></span>
                         </p>
                       </div>
                       <button
                         onClick={() => handleDeleteDoc('trainingSchedules', item.id)}
                         className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-red-50 text-slate-400 flex items-center justify-center border border-slate-200"
-                        title="ลบตาราง"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -549,7 +557,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                   placeholder="หัวข้อรายงานเคส / โฟลว์งาน..."
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#D9361C]/50"
+                  className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
                   required
                 />
                 <input
@@ -557,7 +565,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                   placeholder="พิมพ์ชื่อวอร์ด / แผนกเองได้..."
                   value={newDepartment}
                   onChange={(e) => setNewDepartment(e.target.value)}
-                  className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#D9361C]/50"
+                  className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
                   required
                 />
                 <input
@@ -565,17 +573,17 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                   placeholder="พิมพ์กลุ่มฝึกปฏิบัติเองได้..."
                   value={newStudentGroup}
                   onChange={(e) => setNewStudentGroup(e.target.value)}
-                  className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#D9361C]/50"
+                  className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
                   required
                 />
                 <div className="md:col-span-3 flex justify-end">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2.5 bg-[#D9361C] hover:bg-red-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-red-500/20 transition-all flex items-center justify-center gap-2"
+                    className="px-6 py-2.5 bg-[#D9361C] hover:bg-red-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
                   >
                     <Plus className="w-4 h-4" />
-                    <span>{loading ? 'กำลังบันทึก...' : 'บันทึกโฟลว์งาน (Add Record)'}</span>
+                    <span>{loading ? 'กำลังบันทึก...' : 'บันทึกโฟลว์งาน'}</span>
                   </button>
                 </div>
               </form>
@@ -605,8 +613,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                         </span>
                         <button
                           onClick={() => handleDeleteDoc('flowWorks', item.id)}
-                          className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-400 flex items-center justify-center transition-colors"
-                          title="ลบรายการ"
+                          className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-red-50 text-slate-400 flex items-center justify-center border border-slate-200"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -628,8 +635,8 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                   <UploadCloud className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">เพิ่มและจัดกลุ่มนักศึกษา (Add Student Roster)</h3>
-                  <p className="text-xs text-slate-500">รายชื่อที่เพิ่มในส่วนนี้จะเชื่อมโยงกับตารางการฝึกปฏิบัติ หอพัก และรถตู้</p>
+                  <h3 className="text-sm font-bold text-slate-900">เพิ่มและจัดกลุ่มนักศึกษา</h3>
+                  <p className="text-xs text-slate-500">รายชื่อที่เพิ่มจะเชื่อมโยงกับระบบ Assign ห้องพักและรถตู้</p>
                 </div>
               </div>
 
@@ -639,19 +646,18 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                     <label className="text-xs font-bold text-slate-700">กลุ่มฝึกปฏิบัติ</label>
                     <input
                       type="text"
-                      placeholder="เช่น กลุ่ม ก, กลุ่มพิเศษ..."
+                      placeholder="เช่น กลุ่ม ก..."
                       value={targetGroup}
                       onChange={(e) => setTargetGroup(e.target.value)}
                       className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
                       required
                     />
                   </div>
-
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700">วอร์ด / แผนกปฏิบัติงาน</label>
+                    <label className="text-xs font-bold text-slate-700">วอร์ด / แผนก</label>
                     <input
                       type="text"
-                      placeholder="เช่น หอผู้ป่วยอายุรกรรม, ห้องฉุกเฉิน..."
+                      placeholder="เช่น หอผู้ป่วยอายุรกรรม..."
                       value={targetWard}
                       onChange={(e) => setTargetWard(e.target.value)}
                       className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
@@ -679,7 +685,7 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
                     className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all flex items-center gap-2"
                   >
                     <FileSpreadsheet className="w-4 h-4" />
-                    <span>{loading ? 'กำลังบันทึก...' : 'เพิ่มข้อมูลนักศึกษา (Add Students)'}</span>
+                    <span>{loading ? 'กำลังบันทึก...' : 'เพิ่มข้อมูลนักศึกษา'}</span>
                   </button>
                 </div>
               </form>
@@ -729,73 +735,121 @@ export const ModulePlaceholderView: React.FC<ModulePlaceholderViewProps> = ({
           </div>
         )}
 
-        {/* ================= VAN SERVICE TAB ================= */}
+        {/* ================= VAN SERVICE TAB (Van Number, Driver, Phone, Assigned Student) ================= */}
         {tab === 'van' && (
           <div className="space-y-6">
             <div className="p-6 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-4">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Link2 className="w-4 h-4 text-emerald-600" />
-                <span>Assign นักศึกษาขึ้นรถตู้รับส่ง</span>
+                <Car className="w-4 h-4 text-emerald-600" />
+                <span>บันทึกข้อมูลรถตู้ (คันที่, ชื่อคนขับ, เบอร์โทร, Assign นักศึกษา)</span>
               </h3>
               
-              {studentGroups.length === 0 ? (
-                <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
-                  ⚠️ ยังไม่มีรายชื่อนักศึกษาในระบบ กรุณาเพิ่มรายชื่อนักศึกษาก่อน
-                </div>
-              ) : (
-                <form onSubmit={handleAddVanBooking} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <form onSubmit={handleAddVanBooking} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700">คันที่ (Van Number)</label>
                   <input
                     type="text"
-                    placeholder="เส้นทางและรอบรถ..."
+                    placeholder="เช่น รถตู้คันที่ 1..."
+                    value={vanNumber}
+                    onChange={(e) => setVanNumber(e.target.value)}
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700">เส้นทาง (Route)</label>
+                  <input
+                    type="text"
+                    placeholder="เช่น สถาบัน ⟷ รพ.สมเด็จ..."
                     value={vanRoute}
                     onChange={(e) => setVanRoute(e.target.value)}
                     className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
                     required
                   />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700">ชื่อคนขับ (Driver Name)</label>
+                  <input
+                    type="text"
+                    placeholder="เช่น นายสมชาย ขับรถ..."
+                    value={driverName}
+                    onChange={(e) => setDriverName(e.target.value)}
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700">เบอร์โทรศัพท์ (Phone Number)</label>
+                  <input
+                    type="text"
+                    placeholder="เช่น 081-234-5678..."
+                    value={driverPhone}
+                    onChange={(e) => setDriverPhone(e.target.value)}
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5 sm:col-span-2">
+                  <label className="text-xs font-bold text-slate-700">Assign นักศึกษาขึ้นรถ</label>
                   <select
                     value={vanSelectedStudentId}
                     onChange={(e) => setVanSelectedStudentId(e.target.value)}
-                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
+                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
                     required
                   >
-                    <option value="">-- เลือกนักศึกษาจากรายชื่อ --</option>
+                    <option value="">-- เลือกนักศึกษาจากรายชื่อที่อัปโหลด --</option>
                     {studentGroups.map((st) => (
                       <option key={st.id} value={st.id}>
                         {st.studentName} ({st.groupName} - {st.studentId})
                       </option>
                     ))}
                   </select>
-                  <div className="sm:col-span-2 flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all flex items-center gap-2"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>{loading ? 'กำลังบันทึก...' : 'Assign นักศึกษาขึ้นรถตู้'}</span>
-                    </button>
-                  </div>
-                </form>
-              )}
+                </div>
+
+                <div className="sm:col-span-2 flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>{loading ? 'กำลังบันทึก...' : 'บันทึกข้อมูลรถตู้และคนขับ'}</span>
+                  </button>
+                </div>
+              </form>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">รายการ Assign รถตู้ทั้งหมดแบบ Real-Time</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">รายการรถตู้ทั้งหมดแบบ Real-Time</h3>
               {vanBookings.length === 0 ? (
                 <div className="text-center py-12 bg-slate-50 rounded-2xl border border-slate-200 text-slate-400 text-xs">
-                  ยังไม่มีการ Assign รถตู้ในระบบ
+                  ยังไม่มีข้อมูลรถตู้ในระบบ
                 </div>
               ) : (
                 <div className="space-y-3">
                   {vanBookings.map((item) => (
                     <div key={item.id} className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div className="space-y-1">
+                      <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold">Van Allocation</span>
+                          <span className="px-2.5 py-0.5 rounded-md bg-emerald-600 text-white text-[11px] font-bold">{item.vanNumber || 'คันที่ 1'}</span>
                           <span className="text-[10px] text-slate-400">{item.createdAt}</span>
                         </div>
                         <h4 className="text-sm font-bold text-slate-900">{item.route}</h4>
-                        <p className="text-xs text-slate-600">นักศึกษา: <span className="font-semibold text-emerald-700">{item.assignedStudentName}</span></p>
+                        <div className="flex flex-wrap gap-4 text-xs text-slate-600 pt-1">
+                          <span className="flex items-center gap-1 font-semibold text-slate-800">
+                            <Car className="w-3.5 h-3.5 text-emerald-600" />
+                            คนขับ: {item.driverName}
+                          </span>
+                          <span className="flex items-center gap-1 font-mono text-slate-700">
+                            <Phone className="w-3.5 h-3.5 text-blue-600" />
+                            เบอร์โทร: {item.driverPhone}
+                          </span>
+                          <span className="text-emerald-700">นักศึกษา: {item.assignedStudentName}</span>
+                        </div>
                       </div>
                       <button
                         onClick={() => handleDeleteDoc('vanBookings', item.id)}
