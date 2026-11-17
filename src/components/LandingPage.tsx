@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserRole } from '../types';
 import { ROLES_DATA } from '../data/mockData';
-import { GraduationCap, UserCheck, Hospital, ArrowRight, BookOpen, Plus } from 'lucide-react';
+import { GraduationCap, UserCheck, Hospital, ArrowRight, BookOpen, Plus, ShieldCheck, Stethoscope } from 'lucide-react';
 
 interface LandingPageProps {
   onSelectRole: (role: UserRole) => void;
@@ -9,6 +9,8 @@ interface LandingPageProps {
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onSelectRole, onOpenInstructions }) => {
+  const [imgFailed, setImgFailed] = useState(false);
+
   const getRoleIcon = (iconName: string) => {
     switch (iconName) {
       case 'GraduationCap':
@@ -31,20 +33,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectRole, onOpenIn
         <div className="lg:col-span-7 bg-[#E3F2FD] p-8 lg:p-14 flex flex-col justify-between space-y-8">
           
           {/* Top Brand & Instructions Header */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#D9361C] flex items-center justify-center text-white shadow-md shadow-red-500/20">
+              <div className="w-10 h-10 rounded-xl bg-[#D9361C] flex items-center justify-center text-white shadow-md shadow-red-500/20 shrink-0">
                 <Plus className="w-6 h-6 font-bold" />
               </div>
               <div>
                 <h1 className="text-base font-extrabold text-slate-900 tracking-tight leading-none">STIN-Somdej connect</h1>
-                <p className="text-[11px] font-semibold text-slate-600">ระบบประสานงานแหล่งฝึกโรงพยาบาลสมเด็จฯ ณ ศรีราชา</p>
+                <p className="text-[11px] font-semibold text-slate-600 mt-0.5">ระบบประสานงานแหล่งฝึกโรงพยาบาลสมเด็จฯ ณ ศรีราชา</p>
               </div>
             </div>
 
             <button
               onClick={onOpenInstructions}
-              className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-700 bg-white/90 border border-sky-200 rounded-xl hover:bg-white hover:text-[#D9361C] transition-all shadow-xs"
+              className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-700 bg-white/90 border border-sky-200 rounded-xl hover:bg-white hover:text-[#D9361C] transition-all shadow-xs whitespace-nowrap shrink-0"
             >
               <BookOpen className="w-4 h-4 text-[#D9361C]" />
               <span>System Instructions / คู่มือระบบ</span>
@@ -100,7 +102,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectRole, onOpenIn
                     e.stopPropagation();
                     onSelectRole(role.id);
                   }}
-                  className="w-full py-3 bg-[#D9361C] hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-md shadow-red-500/20 transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-3 bg-[#D9361C] hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-md shadow-red-500/20 transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"
                 >
                   <span>Continue</span>
                   <ArrowRight className="w-4 h-4" />
@@ -111,28 +113,51 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectRole, onOpenIn
 
           {/* Bottom Security / Reliable Footer Tag */}
           <div className="pt-4 flex items-center justify-center text-xs font-medium text-slate-600 gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Secure · Reliable · Efficient — STIN-Somdej connect</span>
           </div>
         </div>
 
-        {/* Right Section: Animated Medical Equipment Illustration Image */}
-        <div className="lg:col-span-5 bg-[#FFF3EE] flex items-center justify-center relative overflow-hidden border-l border-orange-100 p-6 lg:p-12">
+        {/* Right Section: Seamless Clinical Practice Illustration Showcase */}
+        <div className="lg:col-span-5 bg-gradient-to-br from-[#FFF6F0] via-[#FDE6D4] to-[#FCE0CB] flex flex-col items-center justify-center relative overflow-hidden border-t lg:border-t-0 lg:border-l border-orange-100/90 p-8 lg:p-12">
           <style>{`
-            @keyframes float {
-              0%, 100% { transform: translateY(0px) rotate(0deg); }
-              50% { transform: translateY(-12px) rotate(0.5deg); }
+            @keyframes heroFloat {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-8px); }
             }
-            .animate-float {
-              animation: float 4.5s ease-in-out infinite;
+            @media (prefers-reduced-motion: no-preference) {
+              .animate-hero-float {
+                animation: heroFloat 5s ease-in-out infinite;
+              }
             }
           `}</style>
-          <div className="w-full h-full flex items-center justify-center max-w-xl max-h-[85vh]">
-            <img
-              src="/assets/aistudio/Screenshot_2026-11-17_154012_eb584867.png"
-              alt="Animated Medical Equipment Illustration"
-              className="w-full h-full object-contain drop-shadow-2xl rounded-3xl animate-float"
-            />
+
+          {/* Subtle warm ambient accents */}
+          <div className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full bg-white/40 blur-2xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-16 w-80 h-80 rounded-full bg-[#E3F2FD]/45 blur-2xl" />
+
+          <div className="relative z-10 w-full max-w-md flex flex-col items-center">
+            <div className="w-full aspect-[3/4] rounded-[2rem] overflow-hidden bg-[#FDE5D2] border border-white/80 shadow-xl shadow-orange-950/10 animate-hero-float">
+              {!imgFailed ? (
+                <img
+                  src="/src/assets/images/nursing_hero_illustration_1794908493930.jpg"
+                  alt="ภาพประกอบระบบบริหารจัดการฝึกปฏิบัติการพยาบาล STIN-Somdej connect"
+                  referrerPolicy="no-referrer"
+                  onError={() => setImgFailed(true)}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-gradient-to-b from-[#FFF3EE] to-[#E3F2FD]/60 space-y-4">
+                  <div className="w-20 h-20 rounded-3xl bg-white shadow-sm border border-orange-100 flex items-center justify-center text-[#D9361C]">
+                    <Stethoscope className="w-10 h-10" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-base font-extrabold text-slate-900">STIN-Somdej connect</p>
+                    <p className="text-xs text-slate-600">ระบบประสานงานแหล่งฝึกภาคปฏิบัติการพยาบาล</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
