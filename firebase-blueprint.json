@@ -2,14 +2,16 @@
   "entities": {
     "FlowWork": {
       "title": "Flow Work Submission",
-      "description": "Student clinical practice case study or report submission reviewed by chairman",
+      "description": "Course-specific practice data or report submission reviewed by chairman",
       "properties": {
         "id": { "type": "string" },
+        "courseName": { "type": "string", "maxLength": 200 },
+        "instructorName": { "type": "string", "maxLength": 150 },
         "title": { "type": "string", "maxLength": 200 },
         "studentName": { "type": "string", "maxLength": 100 },
         "studentGroup": { "type": "string", "maxLength": 50 },
         "department": { "type": "string", "maxLength": 100 },
-        "status": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "maxLength": 80 },
         "feedback": { "type": "string", "maxLength": 500 },
         "createdAt": { "type": "string" }
       }
@@ -27,16 +29,22 @@
     },
     "VanBooking": {
       "title": "Van Booking",
-      "description": "Van reservation with van number, driver name, phone number and student assignment",
+      "description": "Van reservation with direction, date, van number, driver details and multi-student assignments",
       "properties": {
         "id": { "type": "string" },
-        "route": { "type": "string", "maxLength": 100 },
+        "route": { "type": "string", "maxLength": 150 },
+        "direction": { "type": "string", "maxLength": 50 },
+        "date": { "type": "string", "maxLength": 50 },
         "vanNumber": { "type": "string", "maxLength": 50 },
         "driverName": { "type": "string", "maxLength": 100 },
         "driverPhone": { "type": "string", "maxLength": 50 },
-        "assignedStudentName": { "type": "string", "maxLength": 100 },
+        "assignedStudentId": { "type": "string", "maxLength": 100 },
+        "assignedStudentIds": { "type": "array" },
+        "assignedStudentNames": { "type": "array" },
+        "assignedStudentName": { "type": "string", "maxLength": 2000 },
         "timeSlot": { "type": "string", "maxLength": 50 },
-        "status": { "type": "string", "maxLength": 30 }
+        "status": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string" }
       }
     },
     "StudentGroupAllocation": {
@@ -53,23 +61,30 @@
     },
     "AccommodationRecord": {
       "title": "Accommodation & Billing Record",
-      "description": "Room booking, utility bills and payment slips",
+      "description": "Room assignment with multi-student support and stay dates, utility bills and payment slips",
       "properties": {
         "id": { "type": "string" },
         "type": { "type": "string", "maxLength": 30 },
         "title": { "type": "string", "maxLength": 200 },
-        "amount": { "type": "string", "maxLength": 50 },
+        "assignedStudentId": { "type": "string", "maxLength": 100 },
+        "assignedStudentIds": { "type": "array" },
+        "assignedToList": { "type": "array" },
+        "assignedTo": { "type": "string", "maxLength": 2000 },
+        "checkInDate": { "type": "string", "maxLength": 50 },
+        "checkOutDate": { "type": "string", "maxLength": 50 },
+        "amount": { "type": "string", "maxLength": 100 },
         "status": { "type": "string", "maxLength": 50 },
         "createdAt": { "type": "string" }
       }
     },
     "TrainingSchedule": {
       "title": "Training Schedule",
-      "description": "Training schedule mapped by student group, instructor, training site, and calendar date range",
+      "description": "Course-based training schedule mapped by student group, instructors, training site, and calendar date range",
       "properties": {
         "id": { "type": "string" },
+        "courseName": { "type": "string", "maxLength": 200 },
         "studentGroup": { "type": "string", "maxLength": 100 },
-        "instructorName": { "type": "string", "maxLength": 100 },
+        "instructorNames": { "type": "string", "maxLength": 300 },
         "trainingSite": { "type": "string", "maxLength": 200 },
         "startDate": { "type": "string", "maxLength": 50 },
         "endDate": { "type": "string", "maxLength": 50 },

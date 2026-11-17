@@ -67,11 +67,9 @@ export const InstructionsPage: React.FC<InstructionsPageProps> = () => {
   return (
     <div className="space-y-8 pb-12">
       {/* Top Banner / Hero Section */}
-      <div className="relative bg-gradient-to-r from-sky-100 via-rose-50 to-amber-50 rounded-3xl p-8 lg:p-12 border border-sky-200/60 shadow-lg shadow-sky-950/5 overflow-hidden">
-        <div className="absolute right-0 top-0 w-96 h-96 bg-gradient-to-bl from-blue-200/40 via-red-100/30 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-        
+      <div className="relative bg-gradient-to-r from-[#E3F2FD] via-white to-[#FFF3EE] rounded-3xl p-8 lg:p-12 border border-sky-200/80 shadow-sm overflow-hidden">
         <div className="relative z-10 max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 border border-sky-200 text-[#D9361C] text-xs font-bold shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-sky-200 text-[#D9361C] text-xs font-bold shadow-2xs">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Comprehensive Nursing Education Guide</span>
           </div>
@@ -85,25 +83,25 @@ export const InstructionsPage: React.FC<InstructionsPageProps> = () => {
                 System Instructions
               </h2>
             </div>
-            <p className="text-base text-slate-600 font-medium">
+            <p className="text-base text-slate-700 font-semibold">
               STIN-Somdej connect: คู่มือการใช้งานระบบประสานงานแหล่งฝึกโรงพยาบาลสมเด็จฯ ณ ศรีราชา
             </p>
           </div>
 
-          <p className="text-sm text-slate-500 leading-relaxed max-w-2xl">
+          <p className="text-sm text-slate-600 leading-relaxed max-w-2xl">
             เรียนรู้ขั้นตอนการดำเนินงานและการใช้งานโมดูลต่างๆ ตั้งแต่การบริหารจัดการนักศึกษา ตารางฝึกปฏิบัติ การส่งโฟลว์งาน ไปจนถึงการจองรถตู้ ที่พัก และการตรวจทานของประธานหลักสูตร
           </p>
 
           {/* Search bar */}
           <div className="pt-2 flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-4 top-3.5 w-4 h-4 text-sky-600" />
               <input
                 type="text"
                 placeholder="ค้นหาคู่มือ หัวข้อ หรือขั้นตอนการใช้งาน..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 bg-white/95 border border-slate-200 rounded-2xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D9361C]/50 shadow-sm"
+                className="w-full pl-11 pr-4 py-3 bg-white border border-sky-200 rounded-2xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40 shadow-xs"
               />
             </div>
           </div>
@@ -119,7 +117,7 @@ export const InstructionsPage: React.FC<InstructionsPageProps> = () => {
             className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
               selectedCategory === cat
                 ? 'bg-[#D9361C] text-white shadow-md shadow-red-500/20'
-                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                : 'bg-white text-slate-700 border border-sky-100 hover:bg-[#E3F2FD]/60'
             }`}
           >
             {cat}
@@ -132,17 +130,15 @@ export const InstructionsPage: React.FC<InstructionsPageProps> = () => {
         {filteredSections.map((section) => (
           <div
             key={section.id}
-            className="group bg-white rounded-3xl p-6 border border-slate-200/80 hover:border-[#D9361C] hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
+            className="group bg-white rounded-3xl p-6 border border-sky-100 hover:border-[#D9361C] hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-slate-50 to-transparent rounded-bl-full -mr-8 -mt-8 group-hover:from-red-50/60 transition-colors"></div>
-
             <div className="space-y-4 relative z-10">
               <div className="flex items-center justify-between">
-                <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center group-hover:bg-red-50 group-hover:border-red-100 transition-colors shadow-xs">
+                <div className="w-14 h-14 rounded-2xl bg-[#E3F2FD]/60 border border-sky-100 flex items-center justify-center group-hover:bg-[#FFF3EE] group-hover:border-orange-200 transition-colors">
                   {getSectionIcon(section.icon)}
                 </div>
-                <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-mono text-xs font-bold tracking-wider group-hover:bg-[#D9361C] group-hover:text-white transition-colors">
-                  {section.stepNumber}
+                <span className="font-mono text-xs font-bold tracking-wider text-slate-500 group-hover:text-[#D9361C] transition-colors">
+                  STEP {section.stepNumber}
                 </span>
               </div>
 
@@ -213,14 +209,9 @@ export const InstructionsPage: React.FC<InstructionsPageProps> = () => {
 
               <div className="space-y-2">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">รายละเอียดคู่มือ (Detailed Instructions)</h4>
-                <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-200/60">
+                <p className="text-xs text-slate-700 leading-relaxed bg-[#E3F2FD]/40 p-4 rounded-2xl border border-sky-100">
                   {activeModalItem.descriptionTh} ระบบได้รับการออกแบบตามมาตรฐานการพยาบาลเพื่ออำนวยความสะดวกแก่อาจารย์ นักศึกษา และเจ้าหน้าที่โรงพยาบาลสมเด็จ สามารถใช้งานผ่านเมนูด้านข้างได้ทันที
                 </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2">
-                <span className="font-bold">หมายเหตุ (Milestone 1):</span>
-                <span>ในเวอร์ชันนี้เป็นการสร้างโครงสร้างหน้าจอและระบบนำทาง เอกสารคำแนะนำจะได้รับการเชื่อมโยงกับฐานข้อมูลจริงในลำดับถัดไป</span>
               </div>
             </div>
 
