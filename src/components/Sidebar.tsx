@@ -6,8 +6,6 @@ import {
   FileText, 
   Bus, 
   Bed, 
-  Zap, 
-  Receipt, 
   Megaphone, 
   BarChart3, 
   Users,
@@ -33,8 +31,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, curre
     { id: 'instructions' as NavTab, labelTh: 'คู่มือระบบ', labelEn: 'System Instructions', icon: BookOpen },
   ];
 
-  // Filter or prioritize based on role if desired, or show all with role badge context
+  // Students can view info and upload payment slips (hide admin student-groups and reports setup)
   const getFilteredItems = () => {
+    if (currentRole === 'student') {
+      return navItems.filter(item => item.id !== 'student-groups' && item.id !== 'reports');
+    }
     return navItems;
   };
 
@@ -43,9 +44,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, curre
       <div className="space-y-6">
         <div className="px-3 py-2">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Navigation Menu ({currentRole || 'General'})
+            Navigation Menu ({currentRole === 'student' ? 'Student View & Upload' : currentRole})
           </span>
-          <p className="text-xs font-semibold text-slate-800 pt-0.5">ระบบฝึกปฏิบัติการพยาบาล</p>
+          <p className="text-xs font-semibold text-slate-800 pt-0.5">ระบบประสานงานแหล่งฝึกฯ</p>
         </div>
 
         <nav className="space-y-1">

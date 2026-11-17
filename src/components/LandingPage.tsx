@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserRole } from '../types';
 import { ROLES_DATA } from '../data/mockData';
-import { GraduationCap, UserCheck, Hospital, ArrowRight, ShieldCheck, HeartPulse, Sparkles, BookOpen } from 'lucide-react';
+import { GraduationCap, UserCheck, Hospital, ArrowRight, BookOpen, Plus } from 'lucide-react';
 
 interface LandingPageProps {
   onSelectRole: (role: UserRole) => void;
@@ -23,121 +23,120 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectRole, onOpenIn
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#EBF8FF] via-[#FFF7EF] to-[#FCE7F3] flex flex-col font-sans">
-      {/* Top Bar / Navigation */}
-      <header className="px-6 py-4 flex items-center justify-between border-b border-sky-100/60 bg-white/70 backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#D9361C] flex items-center justify-center text-white shadow-md shadow-red-500/20">
-            <HeartPulse className="w-6 h-6 animate-pulse" />
-          </div>
-          <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight">STIN-Somdej connect</h1>
-            <p className="text-xs text-slate-500">ระบบบริหารจัดการการฝึกปฏิบัติการพยาบาล</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onOpenInstructions}
-            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-[#D9361C] transition-all shadow-sm"
-          >
-            <BookOpen className="w-4 h-4 text-[#D9361C]" />
-            <span>System Instructions / คู่มือระบบ</span>
-          </button>
-        </div>
-      </header>
-
-      {/* Main Split Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Section: Branding & Welcome */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-[#D9361C] text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Somdet Hospital & Academic Institution</span>
-          </div>
+    <div className="min-h-screen bg-[#E3F2FD] flex flex-col font-sans">
+      {/* Main Split Layout matching reference UI */}
+      <main className="flex-1 w-full grid grid-cols-1 lg:grid-cols-12 min-h-screen">
+        
+        {/* Left Section: Blue Background Panel with Welcome & Role Selection */}
+        <div className="lg:col-span-7 bg-[#E3F2FD] p-8 lg:p-14 flex flex-col justify-between space-y-8">
           
-          <div className="space-y-3">
-            <h2 className="text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              STIN-Somdej <br />
-              <span className="text-[#D9361C]">connect</span>
+          {/* Top Brand & Instructions Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#D9361C] flex items-center justify-center text-white shadow-md shadow-red-500/20">
+                <Plus className="w-6 h-6 font-bold" />
+              </div>
+              <div>
+                <h1 className="text-base font-extrabold text-slate-900 tracking-tight leading-none">STIN-Somdej connect</h1>
+                <p className="text-[11px] font-semibold text-slate-600">ระบบประสานงานแหล่งฝึกโรงพยาบาลสมเด็จฯ ณ ศรีราชา</p>
+              </div>
+            </div>
+
+            <button
+              onClick={onOpenInstructions}
+              className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-700 bg-white/90 border border-sky-200 rounded-xl hover:bg-white hover:text-[#D9361C] transition-all shadow-xs"
+            >
+              <BookOpen className="w-4 h-4 text-[#D9361C]" />
+              <span>System Instructions / คู่มือระบบ</span>
+            </button>
+          </div>
+
+          {/* Welcome & Titles */}
+          <div className="space-y-4 max-w-2xl">
+            <h2 className="text-5xl lg:text-6xl font-black text-slate-900 tracking-tight">
+              Welcome
             </h2>
-            <p className="text-lg font-medium text-slate-600">
-              ระบบบริหารจัดการการฝึกปฏิบัติการพยาบาล
-            </p>
-            <p className="text-sm text-slate-500 leading-relaxed">
-              แพลตฟอร์มศูนย์กลางสำหรับการจัดการตารางฝึกปฏิบัติ การส่งโฟลว์งาน (Flow Work) รถตู้รับส่ง หอพักนักศึกษา และการตรวจทานโดยประธานหลักสูตรอย่างเป็นระบบ
-            </p>
-          </div>
-
-          <div className="pt-2 flex flex-wrap gap-4 text-xs font-medium text-slate-600">
-            <div className="flex items-center gap-1.5 bg-white/80 px-3 py-2 rounded-lg border border-slate-200 shadow-xs">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>Secure Role Portal</span>
+            <div className="space-y-1">
+              <h3 className="text-2xl lg:text-3xl font-extrabold text-[#D9361C] tracking-tight">
+                Nursing Practice Management System
+              </h3>
+              <p className="text-sm font-semibold text-slate-700 pt-1">
+                ระบบประสานงานแหล่งฝึกโรงพยาบาลสมเด็จฯ ณ ศรีราชา
+              </p>
             </div>
-            <div className="flex items-center gap-1.5 bg-white/80 px-3 py-2 rounded-lg border border-slate-200 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-              <span>Milestone 1 Foundation</span>
+
+            <div className="pt-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-700 bg-white/80 px-3 py-1.5 rounded-full border border-sky-200 inline-block">
+                Choose Your Role
+              </span>
             </div>
           </div>
-        </div>
 
-        {/* Right Section: Role Cards Selection */}
-        <div className="lg:col-span-7 bg-white/80 backdrop-blur-md rounded-3xl p-6 lg:p-10 border border-white shadow-xl shadow-sky-900/5 space-y-6">
-          <div className="space-y-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#D9361C]">Welcome / ยินดีต้อนรับ</span>
-            <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Choose Your Role</h3>
-            <p className="text-xs text-slate-500">กรุณาเลือกบทบาทผู้ใช้งานเพื่อเข้าสู่ระบบตามสิทธิ์การปฏิบัติงาน</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Role Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {ROLES_DATA.map((role) => (
               <div
                 key={role.id}
                 onClick={() => onSelectRole(role.id)}
-                className="group relative bg-white rounded-2xl p-6 border border-slate-200 hover:border-[#D9361C] hover:shadow-lg transition-all duration-300 flex flex-col justify-between cursor-pointer overflow-hidden"
+                className="group bg-white rounded-3xl p-6 border border-sky-100 hover:border-[#D9361C] hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer space-y-6 relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-red-50 to-transparent rounded-bl-full -mr-6 -mt-6 group-hover:scale-110 transition-transform"></div>
-                
-                <div className="space-y-4 relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center group-hover:bg-red-50 transition-colors shadow-xs">
+                <div className="space-y-4">
+                  <div className="w-16 h-16 rounded-2xl bg-red-50/60 border border-red-100 flex items-center justify-center group-hover:bg-red-100 transition-colors shadow-xs mx-auto">
                     {getRoleIcon(role.iconName)}
                   </div>
 
-                  <div className="space-y-1">
-                    <span className="inline-block text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 group-hover:bg-red-100 group-hover:text-[#D9361C] transition-colors">
-                      {role.titleEn}
-                    </span>
-                    <h4 className="text-lg font-bold text-slate-900 leading-snug">{role.titleTh}</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed pt-1">{role.descTh}</p>
+                  <div className="space-y-1 text-center">
+                    <h4 className="text-lg font-bold text-slate-900 group-hover:text-[#D9361C] transition-colors">
+                      {role.titleTh}
+                    </h4>
+                    <p className="text-xs text-slate-500 leading-relaxed pt-1">
+                      {role.descTh}
+                    </p>
                   </div>
                 </div>
 
-                <div className="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between relative z-10">
-                  <span className="text-xs font-semibold text-[#D9361C] group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                    <span>Continue</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                  <div className="w-7 h-7 rounded-full bg-slate-50 group-hover:bg-[#D9361C] text-slate-400 group-hover:text-white flex items-center justify-center transition-colors">
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </div>
-                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectRole(role.id);
+                  }}
+                  className="w-full py-3 bg-[#D9361C] hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-md shadow-red-500/20 transition-all flex items-center justify-center gap-1.5"
+                >
+                  <span>Continue</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
               </div>
             ))}
           </div>
 
-          <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 flex items-start gap-3">
-            <div className="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">i</div>
-            <p className="text-xs text-amber-900 leading-relaxed">
-              <span className="font-bold">Milestone 1 Notice:</span> Role selection provides navigation and role-specific shell views. Secure backend authentication and live database storage will be integrated in subsequent milestones.
-            </p>
+          {/* Bottom Security / Reliable Footer Tag */}
+          <div className="pt-4 flex items-center justify-center text-xs font-medium text-slate-600 gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>Secure · Reliable · Efficient — STIN-Somdej connect</span>
           </div>
         </div>
-      </main>
 
-      {/* Footer */}
-      <footer className="py-6 px-8 border-t border-slate-200/60 bg-white/50 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl w-full mx-auto">
-        <p>© 2026 Nursing Practice Management System — Somdet Hospital & Academic Institution.</p>
-        <p className="text-slate-400">Version 1.0.0 (Milestone 1 Foundation)</p>
-      </footer>
+        {/* Right Section: Animated Medical Equipment Illustration Image */}
+        <div className="lg:col-span-5 bg-[#FFF3EE] flex items-center justify-center relative overflow-hidden border-l border-orange-100 p-6 lg:p-12">
+          <style>{`
+            @keyframes float {
+              0%, 100% { transform: translateY(0px) rotate(0deg); }
+              50% { transform: translateY(-12px) rotate(0.5deg); }
+            }
+            .animate-float {
+              animation: float 4.5s ease-in-out infinite;
+            }
+          `}</style>
+          <div className="w-full h-full flex items-center justify-center max-w-xl max-h-[85vh]">
+            <img
+              src="/assets/aistudio/Screenshot_2026-11-17_154012_eb584867.png"
+              alt="Animated Medical Equipment Illustration"
+              className="w-full h-full object-contain drop-shadow-2xl rounded-3xl animate-float"
+            />
+          </div>
+        </div>
+
+      </main>
     </div>
   );
 };

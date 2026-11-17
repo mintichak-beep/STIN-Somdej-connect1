@@ -86,7 +86,7 @@ export const InstructionsPage: React.FC<InstructionsPageProps> = () => {
               </h2>
             </div>
             <p className="text-base text-slate-600 font-medium">
-              STIN-Somdej connect: คู่มือการใช้งานระบบบริหารจัดการการฝึกปฏิบัติการพยาบาล สำหรับสถาบันการศึกษาและโรงพยาบาลสมเด็จ
+              STIN-Somdej connect: คู่มือการใช้งานระบบประสานงานแหล่งฝึกโรงพยาบาลสมเด็จฯ ณ ศรีราชา
             </p>
           </div>
 

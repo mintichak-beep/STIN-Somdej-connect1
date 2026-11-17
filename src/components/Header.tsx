@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
             <h1 className="text-sm font-bold text-slate-900 tracking-tight leading-tight">
               STIN-Somdej connect
             </h1>
-            <p className="text-[11px] text-slate-500 hidden sm:block">ระบบบริหารจัดการการฝึกปฏิบัติการพยาบาล</p>
+            <p className="text-[11px] text-slate-500 hidden sm:block">ระบบประสานงานแหล่งฝึกโรงพยาบาลสมเด็จฯ ณ ศรีราชา</p>
           </div>
         </div>
 
